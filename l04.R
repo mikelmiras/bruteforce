@@ -71,7 +71,7 @@ solveProblem_for <- function(A, b, c){
     emaitza_optimoa = max(z)
     emaitza_optimoa_pos = which(max(z)==z)
     if (length(which(z==emaitza_optimoa)) > 1){
-      emaitza = matrix(c(emaitzak[which(z==emaitza_optimoa)]), nrow=length(which(z==emaitza_optimoa)), byrow=TRUE)
+      emaitza = matrix(unlist(emaitzak[which(z==emaitza_optimoa)]), nrow=length(which(z==emaitza_optimoa)), byrow=TRUE)
     }else{
       emaitza = emaitzak[[emaitza_optimoa_pos]]
     }
