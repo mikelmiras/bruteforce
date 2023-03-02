@@ -139,7 +139,14 @@ all.basic_solutions_apply(A,b)
 # beste funtzio bat idatzi. Ez erabili `apply` funtzioen bidezko inplementazioa. Emaitza zerrenda 
 # batean itzul dezakezu, adibidez. Probak egiteko erabil ezazu 1. ariketako eredu bera.
 basic.feasible.solutions_for <- function(A, b){
-  
+  lista <- all.basic_solutions_for(A,b)
+  emaitza <- list()
+  for(i in 1:length(lista)){
+    if(all(lista[[i]]>=0)){
+      emaitza[[length(emaitza)+1]] <- lista[[i]] 
+    }
+  }
+  return(emaitza)
 }
 # This function returns a list.
 basic.feasible.solutions_for(A,b)
