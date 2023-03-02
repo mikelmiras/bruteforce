@@ -175,12 +175,11 @@ basic.feasible.solutions_for(A,b)
 # bidezko inplementazioa. Emaitza matrize batean itzul dezakezu, adibidez. 
 # Probak egiteko erabil ezazu 1. ariketako eredu bera.
 
-basic.feasible.solutions_apply <- function(A,b){
-  
-  
-  
-  
-} 
+basic.feasible.solutions_apply <- function(A, b) {
+  lista <- all.basic_solutions_for(A, b)
+  emaitza <- lapply(lista, function(x) if (all(x >= 0)) x)
+ 
+}
 # This function returns a matrix. Basic solutions are shown in columns
 basic.feasible.solutions_apply(A,b)  
 ##      [,1]      [,2]      [,3]      [,4]
