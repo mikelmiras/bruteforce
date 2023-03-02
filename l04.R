@@ -99,7 +99,7 @@ solveProblem_for(A,b,c)
 
 solveProblem_apply <- function(A, b, c){ 
 
-  emaitza <- apply(A,)
+  emaitza <- lapply(A,)
   
   
   

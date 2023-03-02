@@ -114,11 +114,10 @@ all.basic_solutions_for(A,b)
 # Probak egiteko erabil ezazu 1. ariketako eredu bera.
 
 all.basic_solutions_apply <- function(A,b){
-  
-  
-  
-  
-} 
+    D <- combn(ncol(A), length(b))
+    ema <- apply(D, 2, function(x) basic.solution(A, b, x))
+    return(as.list(ema))
+  }
 # This function returns a matrix. Basic solutions are shown in columns
 all.basic_solutions_apply(A,b) 
 ##    [,1]      [,2]       [,3] [,4]      [,5]      [,6]
