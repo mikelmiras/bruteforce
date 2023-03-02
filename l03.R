@@ -82,11 +82,13 @@ basic.solution(A1, b1, c(4,5,6))
 # Emaitza zerrenda batean itzul dezakezu, adibidez. Probak egiteko 
 # erabil ezazu 1. ariketako eredu bera.
 all.basic_solutions_for <- function(A, b){
-  comb = combn(ncol(A), nrow(A))
-  for (i in 1:ncol(comb)) {
-    
+  
+  D <- combn(ncol(A),length(b))
+  ema <- list()
+  for (i in 1:ncol(D)){
+    ema[[i]] <- basic.solution(A,b,D[,i])
   }
-  return (result)
+  return(ema)
 }
 # This function returns a list.
 all.basic_solutions_for(A,b)
@@ -116,7 +118,7 @@ all.basic_solutions_for(A,b)
 all.basic_solutions_apply <- function(A,b){
     D <- combn(ncol(A), length(b))
     ema <- apply(D, 2, function(x) basic.solution(A, b, x))
-    return(as.list(ema))
+    return(ema)
   }
 # This function returns a matrix. Basic solutions are shown in columns
 all.basic_solutions_apply(A,b) 
