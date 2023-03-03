@@ -21,6 +21,22 @@ c <- c(3, 4, 5, 6)
 ##################################################################
 ## 1. ariketa  `for` begizten bidezko inplementazioa. 
 # Funtzioak dei egingo dio aurreko laboratorio-saioan inplementatutako  `basic.feasible.solutions_for` funtzioari. 
+
+all.basic_solutions_apply <- function(A,b){
+  D <- combn(ncol(A), length(b))
+  ema <- apply(D, 2, function(x) basic.solution(A, b, x))
+  return(ema)
+}
+
+
+basic.feasible.solutions_apply <- function(A,b)
+{
+  konbinazioak = combn(ncol(A), length(b))
+  emaitza = apply(konbinazioak, 2, FUN = basic.solution, A=A, b=b)
+  zutabe = apply(emaitza, MARGIN=2, FUN = function(x){all(x>=0)})
+  return(emaitza[,zutabe])
+}
+
 basic.solution <- function(A, b, column.ind.vector){
   
   A1 <- A[,column.ind.vector]
@@ -31,8 +47,8 @@ basic.solution <- function(A, b, column.ind.vector){
     x.B<- rep(-1,ncol(A))
   }
   return(x.B)
-  
 }
+
 all.basic_solutions_for <- function(A, b){
   
   D <- combn(ncol(A),length(b))
@@ -42,6 +58,7 @@ all.basic_solutions_for <- function(A, b){
   }
   return(ema)
 }
+
 basic.feasible.solutions_for <- function(A, b){
   lista <- all.basic_solutions_for(A,b)
   emaitza <- list()
@@ -52,11 +69,6 @@ basic.feasible.solutions_for <- function(A, b){
   }
   return(emaitza)
 }
-
-
-
-
-
 
 solveProblem_for <- function(A, b, c){ 
   emaitzak <- basic.feasible.solutions_for(A, b);
@@ -98,14 +110,32 @@ solveProblem_for(A,b,c)
 ## $z$ balioa kalkulatzeko, erabil ezazu beste `apply` funtzio bat. 
 
 solveProblem_apply <- function(A, b, c){ 
-
-  emaitza <- lapply(A,)
-  
-  
-  
+  emaitzak = basic.feasible.solutions_apply(A, b) # get solutions
+  if (length(emaitzak) == 0) { # in case there are no solutions
+    message("Problema honek ez du soluziorik")
+  } else { # having one or more solution
+    z = apply(emaitzak, MARGIN=2, FUN = function(x,c) sum(c * x), c=c)
+    emaitza = list()
+    emaitza_optimoa = max(z)
+    emaitza_optimoa_pos = which(max(z)==z)
+    emaitza_optimoa_posible = length(emaitza_optimoa_pos)
+    # if the solution has more than 1 solution  make a matrix
+    if(emaitza_optimoa_posible > 1){
+      message("Soluzio optimo anizkoitzak daude")
+      emaitza[[1]] = emaitzak[,emaitza_optimoa_pos]
+      emaitza[[2]] = emaitza_optimoa
+      return(emaitza)
+    }else { # return a list with the solutions
+      message("Soluzio optimo bakarra")
+      emaitza[[1]] = emaitzak[,emaitza_optimoa_pos] 
+      emaitza[[2]] = emaitza_optimoa    
+    }
+      return(emaitza)
   }
+}
 
 solveProblem_apply(A,b,c)
+
 # Problemak oinarriko soluzio bideragarri optimo bakarra dauka.
 # $soluzioak
 # [1] 0.0000000 3.7142857 0.0000000 0.2857143
@@ -119,22 +149,15 @@ solveProblem_apply(A,b,c)
 # Erabil itzazu definitutako funtzioak honako eredu lineal hauek ebazteko, 
 # eta egiazta ezazu soluzioa.
 
-# 1. eredua.
-A <- matrix(c(2, 1, 2, -1, 0, 0, 4, 2, 2, 0, -1, 0, 6, 1, 4, 0, 0, -1), nrow=3, byrow=TRUE)
-b <- c(8, 10, 12)
-c <- c(-2, -4, -3, 0, 0, 0)
-solveProblem_for(A,b,c) 
-solveProblem_apply(A,b,c) 
-# Problemak oinarriko soluzio bideragarri optimo bakarra dauka.
-# (x^*_1, x^*_2, x^*_3, x^*_4, x^*_5, x^*_6)=(4, 0, 0, 0, 6, 12) 
-# z^*=-8
+
+
 ##################################################3
 ## 2. eredua. 
 A <- matrix(c(2, 2, 2, 2, -1, 0, 0, 4, 4, 1, 4, 0, 1, 0, 2, 8, 2, 1, 0, 0, -1), nrow=3, byrow=TRUE)
 b <- c(22, 20, 15)
 c <- c(-2, -1, -3, -2, 0, 0, 0)
-solveProblem_for(A,b,c)  # z-ren zeinua aldatuta ematen da...
 solveProblem_apply(A,b,c) # z-ren zeinua aldatuta ematen da...
+solveProblem_for(A,b,c)  # z-ren zeinua aldatuta ematen da...
 # Problemak oinarriko soluzio bideragarri optimo bakarra dauka.
 # (x^*_1, x^*_2, x^*_3, x^*_4, x^*_5, x^*_6)=(0, 3, 8, 0, 0, 0, 25)
 # z^*=27 
@@ -143,8 +166,8 @@ solveProblem_apply(A,b,c) # z-ren zeinua aldatuta ematen da...
 A <- matrix(c(1, 2, 1, 0, 0, 1, 1, 0, -1, 0, 1, -1, 0, 0, 1), nrow=3, byrow=TRUE)
 b <- c(5, 2, 4)
 c <- c(1, 2, 0, 0, 0)
-solveProblem_for(A,b,c) 
 solveProblem_apply(A,b,c) 
+solveProblem_for(A,b,c) 
 # Problemak 2 oinarriko soluzio bideragarri optimo ditu.
 # (x^*_1, x^*_2, x^*_3, x^*_4, x^*_5)=(4.3,\ 0.33,\ 0,\ 2.66,\ 0), z^*= 5
 # (x^*_1, x^*_2, x^*_3, x^*_4, x^*_5)=(0.0,\  2.5,\  0.0,\  0.5,\  6.5), z^*= 5
@@ -153,8 +176,8 @@ solveProblem_apply(A,b,c)
 A <- matrix(c(1, -2, 1, 0, 0, 1, 1, 0, -1, 0, 2, 3, 0, 0, 1), nrow=3, byrow=TRUE)
 b <- c(4, 6, 2)
 c <- c(3, 4, 0, 0, 0)
-solveProblem_for(A,b,c) 
 solveProblem_apply(A,b,c) 
+solveProblem_for(A,b,c) 
 # Problema bideraezina da: ez du soluziorik.
 
 #############################################################################
