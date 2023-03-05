@@ -73,25 +73,25 @@ basic.feasible.solutions_for <- function(A, b){
   return(emaitza)
 }
 
-# funtzio honke matrize bat eta bektore bat emanda
+# funtzio honke matrize bat eta bektore bat emanda hauek ostatatko sistemaren soluzio maximo posible(ak) bueltatzen ditu
 solveProblem_for <- function(A, b, c){ 
-  emaitzak = basic.feasible.solutions_for(A, b);
-  if (length(emaitzak) == 0) {
+  emaitzak = basic.feasible.solutions_for(A, b); # soluzio posibleak
+  if (length(emaitzak) == 0) { # soluziorik ez badaude errorea bota 
     message("Problema honek ez du soluziorik")
-  }else{
-    z = rep(1, length(emaitzak))
+  }else{  
+    z = rep(1, length(emaitzak)) # bektore bat prestatuak datuak gordetzeko
     emaitza_optimoak = c(1, length(emaitzak))
-    for (i in 1:length(emaitzak)){
+    for (i in 1:length(emaitzak)){ # soluzioak lortu
       z[i] = sum(c * emaitzak[[i]])
     }
-    emaitza_optimoa = max(z)
-    emaitza_optimoa_pos = which(max(z)==z)
-    if (length(which(z==emaitza_optimoa)) > 1){
+    emaitza_optimoa = max(z) # soluzio optimoa(k) aukeratu
+    emaitza_optimoa_pos = which(max(z)==z) # soluzioen posizio edo posizioak lortu
+    if (length(which(z==emaitza_optimoa)) > 1){ # soluzio bat baino gehiago kasu
       emaitza = matrix(unlist(emaitzak[which(z==emaitza_optimoa)]), nrow=length(which(z==emaitza_optimoa)), byrow=TRUE)
-    }else{
+    }else{ # hainbat soluzio kasua
       emaitza = emaitzak[[emaitza_optimoa_pos]]
     }
-    return (list(emaitza, emaitza_optimoa))
+    return (list(emaitza, emaitza_optimoa)) # emaitzak bueltatu
   }
 }
 
@@ -114,10 +114,10 @@ solveProblem_for(A,b,c)
 ## $z$ balioa kalkulatzeko, erabil ezazu beste `apply` funtzio bat. 
 
 solveProblem_apply <- function(A, b, c){ 
-  emaitzak = basic.feasible.solutions_apply(A, b) # get solutions
-  if (length(emaitzak) == 0) { # in case there are no solutions
+  emaitzak = basic.feasible.solutions_apply(A, b) # soluzioak lortu
+  if (length(emaitzak) == 0) { # soluziorik ez badadu errorea bota
     message("Problema honek ez du soluziorik")
-  } else { # having one or more solution
+  } else { # soluzioak badaude
     z = apply(emaitzak, MARGIN=2, FUN = function(x,c) sum(c * x), c=c)
     emaitza = list()
     emaitza_optimoa = max(z)
