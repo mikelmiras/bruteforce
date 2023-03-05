@@ -22,6 +22,9 @@ c <- c(3, 4, 5, 6)
 ## 1. ariketa  `for` begizten bidezko inplementazioa. 
 # Funtzioak dei egingo dio aurreko laboratorio-saioan inplementatutako  `basic.feasible.solutions_for` funtzioari. 
 
+
+# importatu solutions apply eta solutions for gero aurrerago erabiltzeko 
+
 all.basic_solutions_apply <- function(A,b){
   D <- combn(ncol(A), length(b))
   ema <- apply(D, 2, function(x) basic.solution(A, b, x))
@@ -70,15 +73,16 @@ basic.feasible.solutions_for <- function(A, b){
   return(emaitza)
 }
 
+# funtzio honke matrize bat eta bektore bat emanda
 solveProblem_for <- function(A, b, c){ 
-  emaitzak <- basic.feasible.solutions_for(A, b);
+  emaitzak = basic.feasible.solutions_for(A, b);
   if (length(emaitzak) == 0) {
     message("Problema honek ez du soluziorik")
   }else{
     z = rep(1, length(emaitzak))
     emaitza_optimoak = c(1, length(emaitzak))
     for (i in 1:length(emaitzak)){
-      z[i] = sum(c * basic.feasible.solutions_for(A, b)[[i]])
+      z[i] = sum(c * emaitzak[[i]])
     }
     emaitza_optimoa = max(z)
     emaitza_optimoa_pos = which(max(z)==z)
